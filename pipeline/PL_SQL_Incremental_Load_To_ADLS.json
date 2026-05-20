@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT last_watermark_value\nFROM dbo.pipeline_watermark\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+						"sqlReaderQuery": {
+							"value": "SELECT last_watermark_value\nFROM dbo.pipeline_watermark\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -59,7 +62,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT MAX(@{pipeline().parameters.watermarkColumn}) AS new_watermark_valueSELECT MAX(@().parameters.sourceTableName}",
+						"sqlReaderQuery": {
+							"value": "SELECT MAX(@{pipeline().parameters.watermarkColumn}) AS new_watermark_valueSELECT MAX(@().parameters.sourceTableName}",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -101,7 +107,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "\nSELECT *\nFROM @{pipeline().parameters.sourceSchemaName}.@{pipeline().parameters.sourceTableName}\nWHERE @{pipeline().parameters.watermarkColumn} > '@{activity('Lookup_Old_Watermark').output.firstRow.last_watermark_value}'\nAND @{pipeline().parameters.watermarkColumn} <= '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value\n",
+						"sqlReaderQuery": {
+							"value": "\nSELECT *\nFROM @{pipeline().parameters.sourceSchemaName}.@{pipeline().parameters.sourceTableName}\nWHERE @{pipeline().parameters.watermarkColumn} > '@{activity('Lookup_Old_Watermark').output.firstRow.last_watermark_value}'\nAND @{pipeline().parameters.watermarkColumn} <= '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}\n",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
