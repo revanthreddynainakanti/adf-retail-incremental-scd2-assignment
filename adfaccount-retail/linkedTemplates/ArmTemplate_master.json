@@ -11,6 +11,18 @@
 			"type": "string",
 			"defaultValue": "https://retail-keyvault12.vault.azure.net/"
 		},
+		"LS_AzureSQL_Retail_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "revanthdatabase.database.windows.net"
+		},
+		"LS_AzureSQL_Retail_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		},
+		"LS_AzureSQL_Retail_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladmin"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -40,6 +52,15 @@
 					},
 					"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('LS_AzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"LS_AzureSQL_Retail_properties_typeProperties_server": {
+						"value": "[parameters('LS_AzureSQL_Retail_properties_typeProperties_server')]"
+					},
+					"LS_AzureSQL_Retail_properties_typeProperties_database": {
+						"value": "[parameters('LS_AzureSQL_Retail_properties_typeProperties_database')]"
+					},
+					"LS_AzureSQL_Retail_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AzureSQL_Retail_properties_typeProperties_userName')]"
 					}
 				}
 			},

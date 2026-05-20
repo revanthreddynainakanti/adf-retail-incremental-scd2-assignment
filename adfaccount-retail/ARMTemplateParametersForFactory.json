@@ -7,6 +7,15 @@
 		},
 		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://retail-keyvault12.vault.azure.net/"
+		},
+		"LS_AzureSQL_Retail_properties_typeProperties_server": {
+			"value": "revanthdatabase.database.windows.net"
+		},
+		"LS_AzureSQL_Retail_properties_typeProperties_database": {
+			"value": "sqladmin"
+		},
+		"LS_AzureSQL_Retail_properties_typeProperties_userName": {
+			"value": "sqladmin"
 		}
 	}
 }
