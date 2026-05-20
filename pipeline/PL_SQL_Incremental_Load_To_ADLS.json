@@ -206,46 +206,32 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
-			},
-			{
-				"name": "LS_AzureDatabricks",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Update_Watermark",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": []
 			}
 		],
 		"parameters": {
 			"sourceSchemaName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "db"
 			},
 			"sourceTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "retail_customers_source"
 			},
 			"watermarkColumn": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "updated_at"
 			},
 			"targetContainer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "raw"
 			},
 			"targetFolderPath": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "retail/customers/incremental/"
 			},
 			"targetFileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "customers_incremental.parquet"
 			}
 		},
 		"annotations": []
