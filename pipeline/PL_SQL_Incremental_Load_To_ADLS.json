@@ -169,6 +169,48 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Update_Watermark",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Copy_Incremental_Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "UPDATE dbo.pipeline_watermark\nSET last_watermark_value = '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}'\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_AzureSQL_Parameterized",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": {
+								"value": "dbo",
+								"type": "Expression"
+							},
+							"tableName": {
+								"value": "pipeline_watermark",
+								"type": "Expression"
+							}
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
