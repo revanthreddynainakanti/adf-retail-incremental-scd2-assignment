@@ -63,7 +63,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT MAX(@{pipeline().parameters.watermarkColumn}) AS new_watermark_valueSELECT MAX(@().parameters.sourceTableName}",
+							"value": "@concat(\n'SELECT MAX(', pipeline().parameters.watermarkColumn, \n') AS new_watermark_value FROM ',\npipeline().parameters.sourceSchemaName, '.', \npipeline().parameters.sourceTableName\n)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -192,7 +192,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "UPDATE dbo.pipeline_watermark\nSET last_watermark_value = '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}'\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+						"sqlReaderQuery": {
+							"value": "UPDATE dbo.pipeline_watermark\nSET last_watermark_value = '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}'\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
