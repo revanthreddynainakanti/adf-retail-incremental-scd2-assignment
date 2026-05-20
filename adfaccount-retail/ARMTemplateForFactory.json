@@ -99,7 +99,7 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderQuery": {
-									"value": "SELECT MAX(@{pipeline().parameters.watermarkColumn}) AS new_watermark_valueSELECT MAX(@().parameters.sourceTableName}",
+									"value": "@concat(\n'SELECT MAX(', pipeline().parameters.watermarkColumn, \n') AS new_watermark_value FROM ',\npipeline().parameters.sourceSchemaName, '.', \npipeline().parameters.sourceTableName\n)",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -144,7 +144,7 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderQuery": {
-									"value": "\nSELECT *\nFROM @{pipeline().parameters.sourceSchemaName}.@{pipeline().parameters.sourceTableName}\nWHERE @{pipeline().parameters.watermarkColumn} > '@{activity('Lookup_Old_Watermark').output.firstRow.last_watermark_value}'\nAND @{pipeline().parameters.watermarkColumn} <= '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}\n",
+									"value": "@concat(\n'SELECT * FROM ',\npipeline().parameters.sourceSchemaName, '.', pipeline().parameters.sourceTableName,\n' WHERE ',\npipeline().parameters.watermarkColumn, ' > ''',\nactivity('Lookup_Old_Watermark').output.firstRow.last_watermark_value,\n''' AND ',\npipeline().parameters.watermarkColumn, ' <= ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''''\n)",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -208,7 +208,7 @@
 					},
 					{
 						"name": "Update_Watermark",
-						"type": "Lookup",
+						"type": "Script",
 						"dependsOn": [
 							{
 								"activity": "Copy_Incremental_Data",
@@ -225,30 +225,21 @@
 							"secureInput": false
 						},
 						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "LS_AzureSQL_Retail",
+							"type": "LinkedServiceReference"
+						},
 						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "UPDATE dbo.pipeline_watermark\nSET last_watermark_value = '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}'\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "DS_AzureSQL_Parameterized",
-								"type": "DatasetReference",
-								"parameters": {
-									"schemaName": {
-										"value": "dbo",
-										"type": "Expression"
-									},
-									"tableName": {
-										"value": "pipeline_watermark",
+							"scripts": [
+								{
+									"type": "Query",
+									"text": {
+										"value": "@concat(\n'UPDATE dbo.pipeline_watermark SET last_watermark_value = ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''' WHERE source_table_name = ''',\npipeline().parameters.sourceTableName,\n''''\n)\n",
 										"type": "Expression"
 									}
 								}
-							}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
@@ -279,7 +270,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_AzureSQL_Parameterized')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_Parquet_Parameterized')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_Parquet_Parameterized')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_AzureSQL_Retail')]"
 			]
 		},
 		{
