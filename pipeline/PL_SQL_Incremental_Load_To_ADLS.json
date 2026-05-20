@@ -107,10 +107,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "\nSELECT *\nFROM @{pipeline().parameters.sourceSchemaName}.@{pipeline().parameters.sourceTableName}\nWHERE @{pipeline().parameters.watermarkColumn} > '@{activity('Lookup_Old_Watermark').output.firstRow.last_watermark_value}'\nAND @{pipeline().parameters.watermarkColumn} <= '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}\n",
-							"type": "Expression"
-						},
+						"sqlReaderQuery": "@concat(\n'SELECT * FROM ',\npipeline().parameters.sourceSchemaName, '.', pipeline().parameters.sourceTableName,\n' WHERE ',\npipeline().parameters.watermarkColumn, ' > ''',\nactivity('Lookup_Old_Watermark').output.firstRow.last_watermark_value,\n''' AND ',\npipeline().parameters.watermarkColumn, ' <= ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''''\n)",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -193,7 +190,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "UPDATE dbo.pipeline_watermark\nSET last_watermark_value = '@{activity('Lookup_New_Watermark').output.firstRow.new_watermark_value}'\nWHERE source_table_name = '@{pipeline().parameters.sourceTableName}'\n",
+							"value": "@concat(\n'UPDATE dbo.pipeline_watermark SET last_watermark_value = ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''' WHERE source_table_name = ''',\npipeline().parameters.sourceTableName,\n''''\n)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
