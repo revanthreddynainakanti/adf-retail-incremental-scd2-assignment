@@ -1,0 +1,23 @@
+{
+	"name": "LS_AzureSQL_Retail",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "revanthdatabase.database.windows.net",
+			"database": "sqladmin",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "sqladmin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_AzureKeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sql-passwordkey4"
+			}
+		}
+	}
+}
