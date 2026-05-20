@@ -169,7 +169,7 @@
 			},
 			{
 				"name": "Update_Watermark",
-				"type": "Lookup",
+				"type": "Script",
 				"dependsOn": [
 					{
 						"activity": "Copy_Incremental_Data",
@@ -186,30 +186,18 @@
 					"secureInput": false
 				},
 				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSQL_Retail",
+					"type": "LinkedServiceReference"
+				},
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "@concat(\n'UPDATE dbo.pipeline_watermark SET last_watermark_value = ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''' WHERE source_table_name = ''',\npipeline().parameters.sourceTableName,\n''''\n)",
-							"type": "Expression"
-						},
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "DS_AzureSQL_Parameterized",
-						"type": "DatasetReference",
-						"parameters": {
-							"schemaName": {
-								"value": "dbo",
-								"type": "Expression"
-							},
-							"tableName": {
-								"value": "pipeline_watermark",
-								"type": "Expression"
-							}
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "@concat(\n'UPDATE dbo.pipeline_watermark SET last_watermark_value = ''',\nactivity('Lookup_New_Watermark').output.firstRow.new_watermark_value,\n''' WHERE source_table_name = ''',\npipeline().parameters.sourceTableName,\n''''\n)\n"
 						}
-					}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
