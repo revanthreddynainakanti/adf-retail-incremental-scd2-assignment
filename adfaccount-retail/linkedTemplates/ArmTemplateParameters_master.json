@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adfaccount-retail"
 		},
+		"LS_ADLSGen2_Retail_properties_typeProperties_url": {
+			"value": "https://retailadls12345.dfs.core.windows.net"
+		},
 		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
 			"value": "https://retail-keyvault12.vault.azure.net/"
 		},
@@ -16,9 +19,6 @@
 		},
 		"LS_AzureSQL_Retail_properties_typeProperties_userName": {
 			"value": "sqladmin"
-		},
-		"LS_ADLSGen2_Retail_properties_typeProperties_url": {
-			"value": "https://retailadls12345.dfs.core.windows.net"
 		},
 		"containerUri": {
 			"value": ""
